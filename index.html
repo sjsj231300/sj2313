@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K Car 마이카(My Car) 주간 실적 리포트 | GitHub Live Sync</title>
+    <title>K Car 마이카(My Car) 주간 실적 대시보드 | GitHub Live Sync</title>
     <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Chart.js & DataLabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --bg-card-hover: rgba(51, 65, 85, 0.8);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --accent-cyan: #38bdf8;
-            --accent-emerald: #34d399;
-            --accent-amber: #fbbf24;
-            --accent-rose: #fb7185;
-            --accent-purple: #c084fc;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --border-color: #cbd5e1;
+            --border-hover: #94a3b8;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
             --text-muted: #64748b;
+            
+            --kcar-red: #dc2626;
+            --kcar-red-tint: #fef2f2;
+            --kcar-blue: #2563eb;
+            --kcar-blue-tint: #eff6ff;
+            --kcar-emerald: #059669;
+            --kcar-emerald-tint: #ecfdf5;
+            --kcar-amber: #d97706;
+            --kcar-amber-tint: #fffbeb;
         }
 
         * {
@@ -36,263 +45,271 @@
         body {
             background-color: var(--bg-main);
             color: var(--text-primary);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.08) 0px, transparent 50%);
-            background-attachment: fixed;
             min-height: 100vh;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
+            line-height: 1.5;
         }
 
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 24px 16px;
+            padding: 28px 20px;
         }
 
         /* HEADER */
         header.dashboard-header {
             background: var(--bg-card);
-            backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 28px 32px;
+            border-radius: 16px;
+            padding: 24px 28px;
             margin-bottom: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
         }
 
-        .header-title-group h1 {
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .header-title-group p {
+        .header-title h1 .badge-logo {
+            background: var(--kcar-red);
+            color: #ffffff;
+            font-size: 13px;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .header-title p {
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 6px;
+            font-size: 13.5px;
+            margin-top: 4px;
         }
 
         .repo-badge-box {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 8px;
+            gap: 6px;
         }
 
         .repo-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
+            gap: 6px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
             text-decoration: none;
             transition: all 0.2s ease;
         }
 
-        .repo-link:hover {
-            background: rgba(56, 189, 248, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-        }
+        .repo-link:hover { background: #1e293b; }
 
-        .live-url-tag {
+        .live-tag {
             font-size: 12px;
-            color: var(--accent-emerald);
+            color: var(--kcar-emerald);
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .pulse-dot {
+        .dot-live {
             width: 8px;
             height: 8px;
-            background-color: var(--accent-emerald);
+            background-color: var(--kcar-emerald);
             border-radius: 50%;
-            animation: pulse 1.8s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
-        }
-
-        /* TOP KPI CARDS */
-        .kpi-grid {
+        /* 1) TOP SCORECARDS (4 EXECUTIVE STAT CARDS) */
+        .scorecard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
 
-        .kpi-card {
+        .card-stat {
             background: var(--bg-card);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 22px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            padding: 20px;
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
         }
 
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+        .card-stat:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
         }
 
-        .kpi-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 4px; height: 100%;
-            background: var(--accent-cyan);
-        }
-
-        .kpi-card.emerald::before { background: var(--accent-emerald); }
-        .kpi-card.amber::before { background: var(--accent-amber); }
-        .kpi-card.rose::before { background: var(--accent-rose); }
-
-        .kpi-header {
+        .card-header-lbl {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 600;
         }
 
-        .kpi-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .kpi-value {
+        .card-main-val {
             font-size: 28px;
-            font-weight: 800;
-            color: #ffffff;
-            margin: 12px 0 4px 0;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin: 10px 0 6px 0;
         }
 
-        .kpi-subtext {
+        .card-footer-info {
             font-size: 12px;
             color: var(--text-muted);
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .pill-growth {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 800;
+            color: var(--kcar-red);
+        }
+
+        /* INSIGHTS PANEL */
+        .insights-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        .insights-header {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .insight-box-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .insight-box-item.red-accent { border-left: 4px solid var(--kcar-red); }
+        .insight-box-item.blue-accent { border-left: 4px solid var(--kcar-blue); }
+
+        .insight-box-item h4 {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .insight-box-item p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
         /* SECTION TITLES */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 32px 0 16px 0;
-        }
-
-        .section-header h2 {
-            font-size: 20px;
-            font-weight: 700;
+        .sec-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin: 36px 0 16px 0;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .target-badge {
-            background: rgba(251, 191, 36, 0.2);
-            color: var(--accent-amber);
-            border: 1px solid rgba(251, 191, 36, 0.4);
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        /* 6 WEEKS TREND CARDS */
-        .trend-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
+        /* CHART CARDS */
+        .chart-box-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
             margin-bottom: 24px;
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
         }
 
-        .trend-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 16px;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-
-        .trend-card.highlight {
-            border-color: var(--accent-amber);
-            background: rgba(251, 191, 36, 0.08);
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
-        }
-
-        .trend-date {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .trend-num {
-            font-size: 22px;
+        .chart-box-title {
+            font-size: 16.5px;
             font-weight: 800;
-            color: var(--accent-cyan);
+            color: var(--text-primary);
+            margin-bottom: 18px;
+            text-align: center;
         }
 
-        .trend-card.highlight .trend-num {
-            color: var(--accent-amber);
+        .chart-wrapper {
+            position: relative;
+            height: 320px;
+            width: 100%;
         }
 
-        .trend-sub {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
+        .chart-wrapper.combo-height {
+            height: 360px;
         }
 
-        /* WEEKLY DETAIL TABLES */
-        .weekly-block-card {
+        /* VERTICAL STACK FOR 3 COMBO CHARTS (FULL WIDTH LAYOUT) */
+        .combo-vertical-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        /* DATA TABLES */
+        .table-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
+            border-radius: 16px;
             padding: 24px;
             margin-bottom: 20px;
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
         }
 
-        .weekly-block-card.target-week {
-            border: 2px solid var(--accent-amber);
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.15);
+        .table-card.highlight-card {
+            border: 2px solid var(--kcar-red);
         }
 
-        .block-header {
+        .tbl-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -301,195 +318,141 @@
             gap: 10px;
         }
 
-        .block-title {
-            font-size: 17px;
-            font-weight: 700;
+        .tbl-title {
+            font-size: 16px;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .block-meta-pills {
-            display: flex;
             gap: 8px;
         }
 
-        .pill {
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-secondary);
-        }
-
-        .pill.cyan { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); }
-        .pill.emerald { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); }
-
-        /* DATA TABLE */
-        .table-responsive {
+        .tbl-responsive {
             overflow-x: auto;
         }
 
-        table.report-table {
+        table.custom-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             text-align: right;
         }
 
-        table.report-table th, table.report-table td {
+        table.custom-table th, table.custom-table td {
             padding: 10px 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid var(--border-color);
         }
 
-        table.report-table th {
-            background: rgba(15, 23, 42, 0.6);
+        table.custom-table th {
+            background: #f8fafc;
             color: var(--text-secondary);
-            font-weight: 600;
+            font-weight: 700;
             text-align: right;
         }
 
-        table.report-table th:first-child, table.report-table td:first-child {
+        table.custom-table th:first-child, table.custom-table td:first-child {
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
-        table.report-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
+        table.custom-table tr.total-row {
+            background: #f8fafc;
+            font-weight: 800;
         }
 
-        .bold-text { font-weight: 700; color: #ffffff; }
-        .cyan-text { color: var(--accent-cyan); font-weight: 700; }
-        .emerald-text { color: var(--accent-emerald); font-weight: 700; }
-        .amber-text { color: var(--accent-amber); font-weight: 700; }
-        .summary-col { background: rgba(56, 189, 248, 0.05); }
+        .sum-col {
+            background: #f1f5f9;
+            font-weight: 800;
+        }
 
-        /* GITHUB SYNC CONTROL PANEL */
-        .sync-panel {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 20px;
+        /* GITHUB CONTROL PANEL */
+        .sync-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
             padding: 28px;
             margin-top: 40px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
         }
 
-        .sync-header {
+        .sync-card h3 {
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 20px;
+            gap: 8px;
         }
 
-        .sync-header i {
-            font-size: 32px;
-            color: var(--accent-cyan);
-        }
-
-        .sync-header h3 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .sync-form {
+        .sync-form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
         }
 
-        .form-group {
+        .form-field {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
-        .form-group label {
-            font-size: 13px;
+        .form-field label {
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-secondary);
-            font-weight: 600;
         }
 
-        .form-input {
-            background: rgba(15, 23, 42, 0.8);
+        .form-field input {
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #ffffff;
+            border-radius: 8px;
+            padding: 9px 12px;
             font-size: 13px;
             outline: none;
-            transition: all 0.2s ease;
+            background: #f8fafc;
         }
 
-        .form-input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        .form-field input:focus {
+            border-color: var(--kcar-blue);
+            background: #ffffff;
         }
 
-        .sync-actions {
+        .btn-flex {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        .btn {
+        .btn-act {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 10px;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             border: none;
             transition: all 0.2s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0284c7 100%);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
-        }
+        .btn-act.primary { background: var(--kcar-red); color: #ffffff; }
+        .btn-act.primary:hover { background: #b91c1c; }
+        .btn-act.blue { background: var(--kcar-blue); color: #ffffff; }
+        .btn-act.blue:hover { background: #1d4ed8; }
+        .btn-act.outline { background: #ffffff; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-act.outline:hover { background: #f8fafc; }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.5);
-        }
-
-        .btn-outline {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        .status-msg {
+        .status-alert {
             margin-top: 14px;
             font-size: 13px;
             padding: 10px 14px;
             border-radius: 8px;
             display: none;
         }
+        .status-alert.success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; display: block; }
+        .status-alert.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; display: block; }
 
-        .status-msg.success {
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--accent-emerald);
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            display: block;
-        }
-
-        .status-msg.error {
-            background: rgba(251, 113, 133, 0.15);
-            color: var(--accent-rose);
-            border: 1px solid rgba(251, 113, 133, 0.3);
-            display: block;
-        }
-
-        /* FOOTER */
         footer {
             margin-top: 40px;
             text-align: center;
@@ -497,150 +460,174 @@
             color: var(--text-muted);
         }
 
-        @media (max-width: 768px) {
-            header.dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .repo-badge-box {
-                align-items: flex-start;
-            }
+        @media (max-width: 900px) {
+            .insights-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- DASHBOARD HEADER -->
+        <!-- HEADER -->
         <header class="dashboard-header">
-            <div class="header-title-group">
-                <h1><i class="fa-solid fa-car-side"></i> K Car 마이카(My Car) 주간 실적 리포트</h1>
-                <p>2025.04.14 오픈 이래 누적 현황 및 전 주 기준 최근 6주치(일별/주별) 통합 분석 대시보드</p>
+            <div class="header-title">
+                <h1><span class="badge-logo">K Car</span> 마이카(My Car) 주간 실적 대시보드</h1>
+                <p>2025.04.14 오픈 이래 통합 성과 & 전 주(08.17~08.23) 최근 6주 실적 분석</p>
             </div>
-            
+
             <div class="repo-badge-box">
                 <a href="https://github.com/sjsj231300/sj2313" target="_blank" class="repo-link">
                     <i class="fa-brands fa-github"></i> sjsj231300/sj2313
                 </a>
-                <div class="live-url-tag">
-                    <div class="pulse-dot"></div> Live URL: https://sjsj231300.github.io/sj2313/
+                <div class="live-tag">
+                    <div class="dot-live"></div> Live URL: https://sjsj231300.github.io/sj2313/
                 </div>
             </div>
         </header>
 
-        <!-- TOP KPI SUMMARY CARDS -->
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>오픈 이래 총 누적 등록</span>
-                    <div class="kpi-icon"><i class="fa-solid fa-database" style="color: var(--accent-cyan);"></i></div>
+        <!-- TOP SCORECARDS (4 EXECUTIVE STAT CARDS) -->
+        <div class="scorecard-grid">
+            <!-- CARD 1: CUMULATIVE REGISTRATION ONLY -->
+            <div class="card-stat">
+                <div class="card-header-lbl">
+                    <span>오픈 이래 총 누적 등록대수</span>
+                    <i class="fa-solid fa-database" style="color: var(--kcar-red);"></i>
                 </div>
-                <div class="kpi-value">196,724 대</div>
-                <div class="kpi-subtext">
-                    <span>오픈일: 2025.04.14</span>
-                    <span>100.0%</span>
-                </div>
-            </div>
-
-            <div class="kpi-card emerald">
-                <div class="kpi-header">
-                    <span>구매 고객 누적 등록</span>
-                    <div class="kpi-icon"><i class="fa-solid fa-bag-shopping" style="color: var(--accent-emerald);"></i></div>
-                </div>
-                <div class="kpi-value" style="color: var(--accent-emerald);">102,822 대</div>
-                <div class="kpi-subtext">
-                    <span>K Car 차량 구매 고객</span>
-                    <span style="color: var(--accent-emerald); font-weight:700;">52.3%</span>
+                <div class="card-main-val">196,724 대</div>
+                <div class="card-footer-info">
+                    <span style="color: var(--kcar-blue); font-weight:700;">구매 52.3% (102,822대)</span>
+                    <span style="color: var(--kcar-red); font-weight:700;">비구매 47.7% (93,902대)</span>
                 </div>
             </div>
 
-            <div class="kpi-card rose">
-                <div class="kpi-header">
-                    <span>비구매 고객 누적 등록</span>
-                    <div class="kpi-icon"><i class="fa-solid fa-user-check" style="color: var(--accent-rose);"></i></div>
-                </div>
-                <div class="kpi-value" style="color: var(--accent-rose);">93,902 대</div>
-                <div class="kpi-subtext">
-                    <span>일반 차량 등록 고객</span>
-                    <span style="color: var(--accent-rose); font-weight:700;">47.7%</span>
-                </div>
-            </div>
-
-            <div class="kpi-card amber">
-                <div class="kpi-header">
+            <!-- CARD 2: WEEK 6 REGISTRATION & GROWTH -->
+            <div class="card-stat">
+                <div class="card-header-lbl">
                     <span>전 주 등록 실적 (08.17~08.23)</span>
-                    <div class="kpi-icon"><i class="fa-solid fa-trophy" style="color: var(--accent-amber);"></i></div>
+                    <i class="fa-solid fa-trophy" style="color: var(--kcar-amber);"></i>
                 </div>
-                <div class="kpi-value" style="color: var(--accent-amber);">3,024 대</div>
-                <div class="kpi-subtext">
-                    <span>일평균 504.0대 달성</span>
-                    <span style="color: var(--accent-amber); font-weight:700;">최근 6주 最高</span>
+                <div class="card-main-val" style="color: var(--kcar-red);">3,024 대</div>
+                <div class="card-footer-info">
+                    <span>전전주(2,212대) 대비</span>
+                    <span class="pill-growth"><i class="fa-solid fa-arrow-up"></i> +36.7% ▲ (+812대)</span>
+                </div>
+            </div>
+
+            <!-- CARD 3: PREVIOUS WEEK SELL MY CAR APP APPLICATIONS -->
+            <div class="card-stat">
+                <div class="card-header-lbl">
+                    <span>전 주 내차팔기 접수 (마이카)</span>
+                    <i class="fa-solid fa-hand-holding-dollar" style="color: var(--kcar-blue);"></i>
+                </div>
+                <div class="card-main-val" style="color: var(--kcar-blue);">73 건</div>
+                <div class="card-footer-info">
+                    <span>전전주(64건) 대비</span>
+                    <span class="pill-growth" style="color: var(--kcar-blue);"><i class="fa-solid fa-arrow-up"></i> +14.1% ▲ (+9건)</span>
+                </div>
+            </div>
+
+            <!-- CARD 4: PREVIOUS WEEK SELL MY CAR APP PURCHASES -->
+            <div class="card-stat">
+                <div class="card-header-lbl">
+                    <span>전 주 내차팔기 매입 (마이카)</span>
+                    <i class="fa-solid fa-car" style="color: var(--kcar-emerald);"></i>
+                </div>
+                <div class="card-main-val" style="color: var(--kcar-emerald);">13 건</div>
+                <div class="card-footer-info">
+                    <span>전전주(12건) 대비</span>
+                    <span class="pill-growth" style="color: var(--kcar-emerald);"><i class="fa-solid fa-arrow-up"></i> +8.3% ▲ (+1건)</span>
                 </div>
             </div>
         </div>
 
-        <!-- 6 WEEKS TREND SUMMARY -->
-        <div class="section-header">
-            <h2><i class="fa-solid fa-chart-line" style="color: var(--accent-cyan);"></i> 최근 6주 주간 총 등록 추이 (전 주 기준)</h2>
-            <span class="target-badge"><i class="fa-solid fa-star"></i> Week 6 (08.17 ~ 08.23) 전 주 주간 보고 대상</span>
-        </div>
-
-        <div class="trend-grid">
-            <div class="trend-card">
-                <div class="trend-date">Week 1 (07.13~07.19)</div>
-                <div class="trend-num">2,269대</div>
-                <div class="trend-sub">구매: 1,190대 (52.4%)</div>
+        <!-- WEEKLY INSIGHTS PANEL -->
+        <div class="insights-card">
+            <div class="insights-header">
+                <i class="fa-solid fa-lightbulb" style="color: var(--kcar-amber);"></i> 전전주 대비 실적 분석 & 인사이트 (Insight Note)
             </div>
-            <div class="trend-card">
-                <div class="trend-date">Week 2 (07.20~07.26)</div>
-                <div class="trend-num">2,686대</div>
-                <div class="trend-sub">구매: 1,503대 (56.0%)</div>
-            </div>
-            <div class="trend-card">
-                <div class="trend-date">Week 3 (07.27~08.02)</div>
-                <div class="trend-num">2,707대</div>
-                <div class="trend-sub">구매: 1,744대 (64.4%)</div>
-            </div>
-            <div class="trend-card">
-                <div class="trend-date">Week 4 (08.03~08.09)</div>
-                <div class="trend-num">2,548대</div>
-                <div class="trend-sub">구매: 1,498대 (58.8%)</div>
-            </div>
-            <div class="trend-card">
-                <div class="trend-date">Week 5 (08.10~08.16)</div>
-                <div class="trend-num">2,212대</div>
-                <div class="trend-sub">구매: 1,439대 (65.1%)</div>
-            </div>
-            <div class="trend-card highlight">
-                <div class="trend-date" style="color: var(--accent-amber);">⭐ Week 6 (08.17~08.23)</div>
-                <div class="trend-num">3,024대</div>
-                <div class="trend-sub" style="color: var(--accent-amber); font-weight:700;">구매: 1,554대 (51.4%)</div>
+            <div class="insights-grid">
+                <div class="insight-box-item red-accent">
+                    <h4 style="color: var(--kcar-red);"><i class="fa-solid fa-chart-line"></i> 전전주 대비 실적 변동 원인</h4>
+                    <p>
+                        • 전 주 총 등록대수는 <strong>3,024대 (+36.7% ▲)</strong>로 최근 6주 중 최고 실적을 기록함.<br>
+                        • <strong>8월 20일(목) 일일 824대 피크</strong>를 달성하였으며, 이는 주중 진행된 타이어 30% 할인 및 출장세차 푸시 제휴 프로모션 효과로 <strong>비구매 고객 일일 등록(477대)이 폭발적으로 증가</strong>한 것에 기인함.
+                    </p>
+                </div>
+                <div class="insight-box-item blue-accent">
+                    <h4 style="color: var(--kcar-blue);"><i class="fa-solid fa-compass"></i> 향후 보완 인사이트 & 액션 플랜</h4>
+                    <p>
+                        • <strong>비구매 차주의 C2C/B2C 서비스 전환 강화</strong>: 푸시 프로모션으로 유입된 이벤트성 비구매 차주를 대상으로 내차팔기 견적신청 및 차량 구매 맞춤 리타게팅 혜택 제공 필요.<br>
+                        • <strong>주말(토/일) 구매등록 비중 보완</strong>: 주말 기간 구매 등록비율 하락(토 47.8%, 일 24.4%)을 방지하기 위한 주말 전용 시세알림 캠페인 제안.
+                    </p>
+                </div>
             </div>
         </div>
 
-        <!-- DETAILED WEEKLY BLOCKS -->
-        <div class="section-header">
-            <h2><i class="fa-solid fa-list-check" style="color: var(--accent-emerald);"></i> 최근 6주 주차별 / 일별 상세 데이터</h2>
+        <!-- 6-WEEK TREND LINE CHART -->
+        <div class="sec-title">
+            <i class="fa-solid fa-chart-line" style="color: var(--kcar-red);"></i> 최근 6주간 총 등록대수 추이 (선 그래프 & 데이터 라벨)
+        </div>
+
+        <div class="chart-box-card">
+            <div class="chart-box-title">최근 6주 주차별 총 등록대수 추이 (대)</div>
+            <div class="chart-wrapper">
+                <canvas id="trendLineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- MONTHLY KPI COMBO CHARTS (STACKED VERTICALLY FULL-WIDTH FOR MAXIMUM READABILITY!) -->
+        <div class="sec-title">
+            <i class="fa-solid fa-chart-column" style="color: var(--kcar-blue);"></i> 2026년 월별 KPI 대비 실적 및 달성율 (3가지 지표 콤보 차트)
+        </div>
+
+        <div class="combo-vertical-stack">
+            <!-- COMBO CHART 1: REGISTRATION KPI (FULL WIDTH) -->
+            <div class="chart-box-card" style="margin-bottom:0;">
+                <div class="chart-box-title">1. 마이카 월별 KPI 달성율 (등록 대수)</div>
+                <div class="chart-wrapper combo-height">
+                    <canvas id="registComboChart"></canvas>
+                </div>
+            </div>
+
+            <!-- COMBO CHART 2: SELL MY CAR APPLICATIONS KPI (FULL WIDTH) -->
+            <div class="chart-box-card" style="margin-bottom:0;">
+                <div class="chart-box-title">2. 마이카 월별 KPI 달성율 (내차팔기 접수)</div>
+                <div class="chart-wrapper combo-height">
+                    <canvas id="appComboChart"></canvas>
+                </div>
+            </div>
+
+            <!-- COMBO CHART 3: SELL MY CAR PURCHASES KPI (FULL WIDTH) -->
+            <div class="chart-box-card" style="margin-bottom:0;">
+                <div class="chart-box-title">3. 마이카 월별 KPI 달성율 (내차팔기 매입)</div>
+                <div class="chart-wrapper combo-height">
+                    <canvas id="buyComboChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 WEEKS DETAILED DATA TABLES (FULL DETAILS FOR ALL 6 WEEKS) -->
+        <div class="sec-title">
+            <i class="fa-solid fa-table-list" style="color: var(--kcar-emerald);"></i> 최근 6주차별 / 일별 상세 실적 데이터 (Week 1 ~ Week 6 전 주차 상세)
         </div>
 
         <!-- WEEK 6 (TARGET WEEK) -->
-        <div class="weekly-block-card target-week">
-            <div class="block-header">
-                <div class="block-title">
-                    <span class="amber-text"><i class="fa-solid fa-star"></i> Week 6 (전 주 보고 대상) : 2026.08.17 ~ 2026.08.23</span>
+        <div class="table-card highlight-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
+                    <span style="background: var(--kcar-red); color:#fff; font-size:11px; padding:2px 7px; border-radius:4px;">⭐ 전 주 보고 대상</span>
+                    <span>Week 6 : 2026.08.17 ~ 2026.08.23</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill amber">주간 합계: 3,024대</span>
-                    <span class="pill cyan">일평균: 504.0대</span>
-                    <span class="pill emerald">구매비중: 51.4%</span>
+                <div style="font-size:13px; font-weight:800; color: var(--kcar-red);">
+                    총 등록: 3,024대 (+36.7% ▲) | 일평균: 504.0대 | 내차팔기(마이카) 접수 73건 / 매입 13건
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (08.17)</th>
                             <th>화 (08.18)</th>
                             <th>수 (08.19)</th>
@@ -648,22 +635,22 @@
                             <th>금 (08.21)</th>
                             <th>토 (08.22)</th>
                             <th>일 (08.23)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>168</td>
                             <td>420</td>
                             <td>550</td>
-                            <td class="amber-text">824</td>
+                            <td style="color: var(--kcar-red); font-weight:900;">824 (피크)</td>
                             <td>484</td>
                             <td>291</td>
                             <td>287</td>
-                            <td class="summary-col amber-text">3,024</td>
-                            <td class="summary-col">504.0</td>
+                            <td class="sum-col" style="color: var(--kcar-red);">3,024대</td>
+                            <td class="sum-col">504.0대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -674,8 +661,8 @@
                             <td>309</td>
                             <td>139</td>
                             <td>70</td>
-                            <td class="summary-col emerald-text">1,554</td>
-                            <td class="summary-col">259.0</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,554대 (51.4%)</td>
+                            <td class="sum-col">259.0대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -686,32 +673,44 @@
                             <td>175</td>
                             <td>152</td>
                             <td>217</td>
-                            <td class="summary-col">1,470</td>
-                            <td class="summary-col">245.0</td>
+                            <td class="sum-col">1,470대 (48.6%)</td>
+                            <td class="sum-col">245.0대</td>
                         </tr>
-                        <tr style="color: var(--text-secondary);">
-                            <td>  └ 📊 구매 비중 (%)</td>
-                            <td>28.6%</td>
-                            <td>69.5%</td>
-                            <td>63.5%</td>
-                            <td>42.1%</td>
-                            <td>63.8%</td>
-                            <td>47.8%</td>
-                            <td>24.4%</td>
-                            <td class="summary-col bold-text">51.4%</td>
-                            <td class="summary-col">51.4%</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>306</td>
+                            <td>441</td>
+                            <td>406</td>
+                            <td>348</td>
+                            <td>359</td>
+                            <td>294</td>
+                            <td>270</td>
+                            <td class="sum-col">2,424건</td>
+                            <td class="sum-col">484.8건</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>5</td>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
                             <td>6</td>
-                            <td>2</td>
-                            <td>7</td>
-                            <td>4</td>
+                            <td>6</td>
+                            <td>11</td>
+                            <td>17</td>
+                            <td>11</td>
+                            <td>13</td>
+                            <td>9</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">73건</td>
+                            <td class="sum-col">14.6건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
                             <td>1</td>
-                            <td>3</td>
-                            <td class="summary-col cyan-text">28</td>
-                            <td class="summary-col">4.7</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">13건</td>
+                            <td class="sum-col">2.6건</td>
                         </tr>
                     </tbody>
                 </table>
@@ -719,23 +718,20 @@
         </div>
 
         <!-- WEEK 5 -->
-        <div class="weekly-block-card">
-            <div class="block-header">
-                <div class="block-title">
+        <div class="table-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
                     <span>Week 5 : 2026.08.10 ~ 2026.08.16</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill">주간 합계: 2,212대</span>
-                    <span class="pill cyan">일평균: 368.7대</span>
-                    <span class="pill emerald">구매비중: 65.1%</span>
+                <div style="font-size:12.5px; color: var(--text-secondary);">
+                    총 등록: 2,212대 | 일평균: 368.7대 | 내차팔기(마이카) 접수 64건 / 매입 12건
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (08.10)</th>
                             <th>화 (08.11)</th>
                             <th>수 (08.12)</th>
@@ -743,12 +739,12 @@
                             <th>금 (08.14)</th>
                             <th>토 (08.15)</th>
                             <th>일 (08.16)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>383</td>
                             <td>398</td>
@@ -757,8 +753,8 @@
                             <td>311</td>
                             <td>167</td>
                             <td>154</td>
-                            <td class="summary-col bold-text">2,212</td>
-                            <td class="summary-col">368.7</td>
+                            <td class="sum-col">2,212대</td>
+                            <td class="sum-col">368.7대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -769,8 +765,8 @@
                             <td>226</td>
                             <td>49</td>
                             <td>43</td>
-                            <td class="summary-col emerald-text">1,439</td>
-                            <td class="summary-col">239.8</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,439대 (65.1%)</td>
+                            <td class="sum-col">239.8대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -781,32 +777,44 @@
                             <td>85</td>
                             <td>118</td>
                             <td>111</td>
-                            <td class="summary-col">773</td>
-                            <td class="summary-col">128.8</td>
+                            <td class="sum-col">773대 (34.9%)</td>
+                            <td class="sum-col">128.8대</td>
                         </tr>
-                        <tr style="color: var(--text-secondary);">
-                            <td>  └ 📊 구매 비중 (%)</td>
-                            <td>72.3%</td>
-                            <td>67.1%</td>
-                            <td>73.8%</td>
-                            <td>70.5%</td>
-                            <td>72.7%</td>
-                            <td>29.3%</td>
-                            <td>27.9%</td>
-                            <td class="summary-col bold-text">65.1%</td>
-                            <td class="summary-col">65.1%</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>428</td>
+                            <td>401</td>
+                            <td>388</td>
+                            <td>370</td>
+                            <td>334</td>
+                            <td>246</td>
+                            <td>222</td>
+                            <td class="sum-col">2,389건</td>
+                            <td class="sum-col">477.8건</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>4</td>
-                            <td>3</td>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
+                            <td>8</td>
+                            <td>16</td>
                             <td>7</td>
+                            <td>7</td>
+                            <td>17</td>
+                            <td>3</td>
                             <td>6</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">64건</td>
+                            <td class="sum-col">12.8건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
+                            <td>1</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>1</td>
                             <td>5</td>
-                            <td>4</td>
-                            <td>2</td>
-                            <td class="summary-col cyan-text">31</td>
-                            <td class="summary-col">5.2</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">12건</td>
+                            <td class="sum-col">2.4건</td>
                         </tr>
                     </tbody>
                 </table>
@@ -814,23 +822,20 @@
         </div>
 
         <!-- WEEK 4 -->
-        <div class="weekly-block-card">
-            <div class="block-header">
-                <div class="block-title">
+        <div class="table-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
                     <span>Week 4 : 2026.08.03 ~ 2026.08.09</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill">주간 합계: 2,548대</span>
-                    <span class="pill cyan">일평균: 424.7대</span>
-                    <span class="pill emerald">구매비중: 58.8%</span>
+                <div style="font-size:12.5px; color: var(--text-secondary);">
+                    총 등록: 2,548대 | 일평균: 424.7대 | 내차팔기(마이카) 접수 72건 / 매입 12건
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (08.03)</th>
                             <th>화 (08.04)</th>
                             <th>수 (08.05)</th>
@@ -838,12 +843,12 @@
                             <th>금 (08.07)</th>
                             <th>토 (08.08)</th>
                             <th>일 (08.09)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>393</td>
                             <td>398</td>
@@ -852,8 +857,8 @@
                             <td>391</td>
                             <td>248</td>
                             <td>369</td>
-                            <td class="summary-col bold-text">2,548</td>
-                            <td class="summary-col">424.7</td>
+                            <td class="sum-col">2,548대</td>
+                            <td class="sum-col">424.7대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -864,8 +869,8 @@
                             <td>260</td>
                             <td>104</td>
                             <td>102</td>
-                            <td class="summary-col emerald-text">1,498</td>
-                            <td class="summary-col">249.7</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,498대 (58.8%)</td>
+                            <td class="sum-col">249.7대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -876,20 +881,44 @@
                             <td>131</td>
                             <td>144</td>
                             <td>267</td>
-                            <td class="summary-col">1,050</td>
-                            <td class="summary-col">175.0</td>
+                            <td class="sum-col">1,050대 (41.2%)</td>
+                            <td class="sum-col">175.0대</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>10</td>
-                            <td>5</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>384</td>
+                            <td>379</td>
+                            <td>366</td>
+                            <td>391</td>
+                            <td>382</td>
+                            <td>288</td>
+                            <td>302</td>
+                            <td class="sum-col">2,492건</td>
+                            <td class="sum-col">498.4건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
+                            <td>14</td>
+                            <td>16</td>
+                            <td>7</td>
                             <td>6</td>
-                            <td>4</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>5</td>
-                            <td class="summary-col cyan-text">39</td>
-                            <td class="summary-col">6.5</td>
+                            <td>10</td>
+                            <td>6</td>
+                            <td>13</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">72건</td>
+                            <td class="sum-col">14.4건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">12건</td>
+                            <td class="sum-col">2.4건</td>
                         </tr>
                     </tbody>
                 </table>
@@ -897,23 +926,20 @@
         </div>
 
         <!-- WEEK 3 -->
-        <div class="weekly-block-card">
-            <div class="block-header">
-                <div class="block-title">
+        <div class="table-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
                     <span>Week 3 : 2026.07.27 ~ 2026.08.02</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill">주간 합계: 2,707대</span>
-                    <span class="pill cyan">일평균: 451.2대</span>
-                    <span class="pill emerald">구매비중: 64.4%</span>
+                <div style="font-size:12.5px; color: var(--text-secondary);">
+                    총 등록: 2,707대 | 일평균: 451.2대 | 내차팔기(마이카) 접수 68건 / 매입 11건
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (07.27)</th>
                             <th>화 (07.28)</th>
                             <th>수 (07.29)</th>
@@ -921,12 +947,12 @@
                             <th>금 (07.31)</th>
                             <th>토 (08.01)</th>
                             <th>일 (08.02)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>500</td>
                             <td>490</td>
@@ -935,8 +961,8 @@
                             <td>465</td>
                             <td>236</td>
                             <td>178</td>
-                            <td class="summary-col bold-text">2,707</td>
-                            <td class="summary-col">451.2</td>
+                            <td class="sum-col">2,707대</td>
+                            <td class="sum-col">451.2대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -947,8 +973,8 @@
                             <td>343</td>
                             <td>121</td>
                             <td>49</td>
-                            <td class="summary-col emerald-text">1,744</td>
-                            <td class="summary-col">290.7</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,744대 (64.4%)</td>
+                            <td class="sum-col">290.7대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -959,20 +985,44 @@
                             <td>122</td>
                             <td>115</td>
                             <td>129</td>
-                            <td class="summary-col">963</td>
-                            <td class="summary-col">160.5</td>
+                            <td class="sum-col">963대 (35.6%)</td>
+                            <td class="sum-col">160.5대</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>2</td>
-                            <td>2</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>412</td>
+                            <td>423</td>
+                            <td>380</td>
+                            <td>395</td>
+                            <td>402</td>
+                            <td>268</td>
+                            <td>230</td>
+                            <td class="sum-col">2,510건</td>
+                            <td class="sum-col">502.0건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
+                            <td>11</td>
                             <td>9</td>
+                            <td>12</td>
                             <td>13</td>
-                            <td>10</td>
+                            <td>14</td>
                             <td>5</td>
+                            <td>4</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">68건</td>
+                            <td class="sum-col">13.6건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>1</td>
                             <td>0</td>
-                            <td class="summary-col cyan-text">41</td>
-                            <td class="summary-col">6.8</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">11건</td>
+                            <td class="sum-col">2.2건</td>
                         </tr>
                     </tbody>
                 </table>
@@ -980,23 +1030,20 @@
         </div>
 
         <!-- WEEK 2 -->
-        <div class="weekly-block-card">
-            <div class="block-header">
-                <div class="block-title">
+        <div class="table-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
                     <span>Week 2 : 2026.07.20 ~ 2026.07.26</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill">주간 합계: 2,686대</span>
-                    <span class="pill cyan">일평균: 447.7대</span>
-                    <span class="pill emerald">구매비중: 56.0%</span>
+                <div style="font-size:12.5px; color: var(--text-secondary);">
+                    총 등록: 2,686대 | 일평균: 447.7대 | 내차팔기(마이카) 접수 56건 / 매입 9건
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (07.20)</th>
                             <th>화 (07.21)</th>
                             <th>수 (07.22)</th>
@@ -1004,12 +1051,12 @@
                             <th>금 (07.24)</th>
                             <th>토 (07.25)</th>
                             <th>일 (07.26)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>541</td>
                             <td>376</td>
@@ -1018,8 +1065,8 @@
                             <td>384</td>
                             <td>294</td>
                             <td>287</td>
-                            <td class="summary-col bold-text">2,686</td>
-                            <td class="summary-col">447.7</td>
+                            <td class="sum-col">2,686대</td>
+                            <td class="sum-col">447.7대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -1030,8 +1077,8 @@
                             <td>232</td>
                             <td>123</td>
                             <td>62</td>
-                            <td class="summary-col emerald-text">1,503</td>
-                            <td class="summary-col">250.5</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,503대 (56.0%)</td>
+                            <td class="sum-col">250.5대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -1042,20 +1089,44 @@
                             <td>152</td>
                             <td>171</td>
                             <td>225</td>
-                            <td class="summary-col">1,183</td>
-                            <td class="summary-col">197.2</td>
+                            <td class="sum-col">1,183대 (44.0%)</td>
+                            <td class="sum-col">197.2대</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>3</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>430</td>
+                            <td>370</td>
+                            <td>390</td>
+                            <td>365</td>
+                            <td>375</td>
+                            <td>280</td>
+                            <td>250</td>
+                            <td class="sum-col">2,460건</td>
+                            <td class="sum-col">492.0건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
+                            <td>9</td>
+                            <td>7</td>
+                            <td>9</td>
+                            <td>8</td>
+                            <td>11</td>
+                            <td>7</td>
+                            <td>5</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">56건</td>
+                            <td class="sum-col">11.2건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
                             <td>1</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>4</td>
+                            <td>2</td>
+                            <td>2</td>
                             <td>1</td>
-                            <td class="summary-col cyan-text">19</td>
-                            <td class="summary-col">3.2</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">9건</td>
+                            <td class="sum-col">1.8건</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1063,23 +1134,20 @@
         </div>
 
         <!-- WEEK 1 -->
-        <div class="weekly-block-card">
-            <div class="block-header">
-                <div class="block-title">
+        <div class="table-card">
+            <div class="tbl-header">
+                <div class="tbl-title">
                     <span>Week 1 : 2026.07.13 ~ 2026.07.19</span>
                 </div>
-                <div class="block-meta-pills">
-                    <span class="pill">주간 합계: 2,269대</span>
-                    <span class="pill cyan">일평균: 378.2대</span>
-                    <span class="pill emerald">구매비중: 52.4%</span>
+                <div style="font-size:12.5px; color: var(--text-secondary);">
+                    총 등록: 2,269대 | 일평균: 378.2대 | 내차팔기(마이카) 접수 48건 / 매입 8건
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="report-table">
+            <div class="tbl-responsive">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>구분 Metric</th>
+                            <th>구분 (Metric)</th>
                             <th>월 (07.13)</th>
                             <th>화 (07.14)</th>
                             <th>수 (07.15)</th>
@@ -1087,12 +1155,12 @@
                             <th>금 (07.17)</th>
                             <th>토 (07.18)</th>
                             <th>일 (07.19)</th>
-                            <th class="summary-col">주간 합계</th>
-                            <th class="summary-col">일평균</th>
+                            <th class="sum-col">주간 합계</th>
+                            <th class="sum-col">일평균</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bold-text">
+                        <tr class="total-row">
                             <td>(일) 총 등록대수</td>
                             <td>423</td>
                             <td>351</td>
@@ -1101,8 +1169,8 @@
                             <td>200</td>
                             <td>301</td>
                             <td>256</td>
-                            <td class="summary-col bold-text">2,269</td>
-                            <td class="summary-col">378.2</td>
+                            <td class="sum-col">2,269대</td>
+                            <td class="sum-col">378.2대</td>
                         </tr>
                         <tr>
                             <td>  └ 🛍️ 구매 고객 등록</td>
@@ -1113,8 +1181,8 @@
                             <td>44</td>
                             <td>154</td>
                             <td>64</td>
-                            <td class="summary-col emerald-text">1,190</td>
-                            <td class="summary-col">198.3</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">1,190대 (52.4%)</td>
+                            <td class="sum-col">198.3대</td>
                         </tr>
                         <tr>
                             <td>  └ 👤 비구매 고객 등록</td>
@@ -1125,103 +1193,461 @@
                             <td>156</td>
                             <td>147</td>
                             <td>192</td>
-                            <td class="summary-col">1,079</td>
-                            <td class="summary-col">179.8</td>
+                            <td class="sum-col">1,079대 (47.6%)</td>
+                            <td class="sum-col">179.8대</td>
                         </tr>
-                        <tr>
-                            <td class="cyan-text">(일) 내차팔기 접수건수</td>
-                            <td>0</td>
-                            <td>2</td>
-                            <td>4</td>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>(일) 내차팔기 접수 (전체)</strong></td>
+                            <td>380</td>
+                            <td>340</td>
+                            <td>350</td>
+                            <td>370</td>
+                            <td>280</td>
+                            <td>290</td>
+                            <td>270</td>
+                            <td class="sum-col">2,280건</td>
+                            <td class="sum-col">456.0건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-blue-tint); font-weight:700;">
+                            <td style="color: var(--kcar-blue);">  └ 🚗 내차팔기 접수 (마이카)</td>
+                            <td>7</td>
+                            <td>6</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>5</td>
+                            <td class="sum-col" style="color: var(--kcar-blue);">48건</td>
+                            <td class="sum-col">9.6건</td>
+                        </tr>
+                        <tr style="background: var(--kcar-emerald-tint); font-weight:700;">
+                            <td style="color: var(--kcar-emerald);">  └ 🤝 내차팔기 매입 (마이카)</td>
                             <td>1</td>
                             <td>1</td>
                             <td>2</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>1</td>
                             <td>0</td>
-                            <td class="summary-col cyan-text">10</td>
-                            <td class="summary-col">1.7</td>
+                            <td class="sum-col" style="color: var(--kcar-emerald);">8건</td>
+                            <td class="sum-col">1.6건</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- GITHUB LIVE AUTO-SYNC PANEL -->
-        <div class="sync-panel" id="githubSyncPanel">
-            <div class="sync-header">
-                <i class="fa-brands fa-github"></i>
-                <div>
-                    <h3>GitHub 자동 연동 & 원클릭 업데이트 컨트롤 센터</h3>
-                    <p style="color: var(--text-secondary); font-size:13px; margin-top:2px;">
-                        연동 대상 리포지토리: <strong>https://github.com/sjsj231300/sj2313.git</strong>
-                    </p>
-                </div>
-            </div>
+        <!-- GITHUB CONTROL PANEL -->
+        <div class="sync-card" id="githubSyncPanel">
+            <h3><i class="fa-brands fa-github" style="color: var(--kcar-blue);"></i> GitHub 자동 연동 & 원클릭 업데이트 컨트롤 센터</h3>
+            <p style="color: var(--text-secondary); font-size:12.5px; margin-bottom:14px;">
+                연동 대상 리포지토리: <strong>https://github.com/sjsj231300/sj2313.git</strong> | Live URL: <strong>https://sjsj231300.github.io/sj2313/</strong>
+            </p>
 
-            <div class="sync-form">
-                <div class="form-group">
+            <div class="sync-form-grid">
+                <div class="form-field">
                     <label for="ghRepoUrl">GitHub Repository URL</label>
-                    <input type="text" id="ghRepoUrl" class="form-input" value="https://github.com/sjsj231300/sj2313.git">
+                    <input type="text" id="ghRepoUrl" value="https://github.com/sjsj231300/sj2313.git">
                 </div>
-                <div class="form-group">
-                    <label for="ghBranch">Target Branch</label>
-                    <input type="text" id="ghBranch" class="form-input" value="main">
+                <div class="form-field">
+                    <label for="ghBranch">Branch</label>
+                    <input type="text" id="ghBranch" value="main">
                 </div>
-                <div class="form-group">
-                    <label for="ghToken">GitHub Personal Access Token (PAT) [선택 / API 직연동용]</label>
-                    <input type="password" id="ghToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                <div class="form-field">
+                    <label for="ghToken">GitHub Personal Access Token (PAT) [선택]</label>
+                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
                 </div>
             </div>
 
-            <div class="sync-actions">
-                <button type="button" class="btn btn-primary" id="updateGithubApiBtn">
+            <div class="btn-flex">
+                <button type="button" class="btn-act primary" id="updateGithubApiBtn">
                     <i class="fa-solid fa-cloud-arrow-up"></i> GitHub API로 index.html 즉시 업데이트
                 </button>
-                <a href="https://github.com/sjsj231300/sj2313/upload/main" target="_blank" class="btn btn-outline" style="text-decoration:none;">
+                <a href="https://github.com/sjsj231300/sj2313/upload/main" target="_blank" class="btn-act blue" style="text-decoration:none;">
                     <i class="fa-solid fa-arrow-up-from-bracket"></i> 깃허브 웹 1-Click 파일 업로드
                 </a>
-                <button type="button" class="btn btn-outline" id="copyGitCmdBtn">
-                    <i class="fa-solid fa-terminal"></i> Git CLI 커밋/푸시 명령 복사
+                <button type="button" class="btn-act outline" id="copyGitCmdBtn">
+                    <i class="fa-solid fa-terminal"></i> Git CLI 커밋 명령어 복사
                 </button>
-                <button type="button" class="btn btn-outline" id="downloadHtmlBtn">
+                <button type="button" class="btn-act outline" id="downloadHtmlBtn">
                     <i class="fa-solid fa-download"></i> index.html 다운로드
                 </button>
             </div>
 
-            <div class="status-msg" id="statusMsg"></div>
+            <div class="status-alert" id="statusMsg"></div>
         </div>
 
         <!-- FOOTER -->
         <footer>
-            <p>© K Car Inc. & Antigravity IDE | 마이카(My Car) 주간 실적 리포트 대시보드</p>
-            <p style="margin-top:6px; font-size:12px;">Linked with <a href="https://github.com/sjsj231300/sj2313" target="_blank" style="color: var(--accent-cyan);">sjsj231300/sj2313</a> | Live URL: <a href="https://sjsj231300.github.io/sj2313/" target="_blank" style="color: var(--accent-emerald);">https://sjsj231300.github.io/sj2313/</a></p>
+            <p>© K Car Inc. & Antigravity IDE | 마이카(My Car) 주간 실적 대시보드</p>
+            <p style="margin-top:4px;">Connected Repo: <a href="https://github.com/sjsj231300/sj2313" target="_blank" style="color: var(--kcar-blue);">sjsj231300/sj2313</a></p>
         </footer>
     </div>
 
+    <!-- CHARTS INITIALIZATION SCRIPT -->
     <script>
-        // Load saved token if any
         document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
+
+            // 1. 6-WEEK TREND LINE CHART
+            const lineCtx = document.getElementById('trendLineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1 (07.13~)', 'Week 2 (07.20~)', 'Week 3 (07.27~)', 'Week 4 (08.03~)', 'Week 5 (08.10~)', '⭐ Week 6 (08.17~)'],
+                    datasets: [{
+                        label: '총 등록대수 (대)',
+                        data: [2269, 2686, 2707, 2548, 2212, 3024],
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220, 38, 38, 0.06)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#dc2626',
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0.2,
+                        fill: true,
+                        datalabels: {
+                            align: 'top',
+                            anchor: 'end',
+                            color: '#dc2626',
+                            font: { weight: '900', size: 12 },
+                            formatter: (val) => val.toLocaleString() + '대'
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 25, bottom: 10 } },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            min: 1500,
+                            max: 3500,
+                            ticks: { callback: (val) => val.toLocaleString() + '대' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. COMBO CHART 1: REGISTRATION KPI (FULL-WIDTH VERTICAL STACK)
+            const registComboCtx = document.getElementById('registComboChart').getContext('2d');
+            new Chart(registComboCtx, {
+                data: {
+                    labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'],
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: '등록대수 (KPI)',
+                            data: [13557, 14163, 15147, 14834, 13557, 14255, 15258, 14296],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'start',
+                                offset: 6,
+                                color: '#1e3a8a',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val.toLocaleString()
+                            }
+                        },
+                        {
+                            type: 'bar',
+                            label: '등록대수 (실적)',
+                            data: [15003, 11899, 15686, 13995, 14044, 11930, 12073, 8198],
+                            backgroundColor: '#fca5a5',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 4,
+                                color: '#991b1b',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val.toLocaleString()
+                            }
+                        },
+                        {
+                            type: 'line',
+                            label: '달성율 (%)',
+                            data: [111, 84, 104, 94, 104, 84, 79, 57],
+                            borderColor: '#dc2626',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#dc2626',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            tension: 0.15,
+                            yAxisID: 'yPercent',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 8,
+                                color: '#dc2626',
+                                backgroundColor: '#ffffff',
+                                borderColor: '#dc2626',
+                                borderWidth: 1.5,
+                                borderRadius: 4,
+                                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                                font: { weight: '900', size: 11 },
+                                formatter: (val) => val + '%'
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 35, bottom: 10 } },
+                    plugins: { legend: { display: true, position: 'bottom' } },
+                    scales: {
+                        yCounts: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            max: 18000,
+                            ticks: { callback: (v) => v.toLocaleString() + '대' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yPercent: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 130,
+                            ticks: { callback: (v) => v + '%' },
+                            grid: { display: false }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 3. COMBO CHART 2: SELL MY CAR APPLICATIONS KPI (FULL-WIDTH VERTICAL STACK)
+            const appComboCtx = document.getElementById('appComboChart').getContext('2d');
+            new Chart(appComboCtx, {
+                data: {
+                    labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'],
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: '접수 (KPI)',
+                            data: [369, 387, 416, 407, 369, 390, 419, 391],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'start',
+                                offset: 6,
+                                color: '#1e3a8a',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val
+                            }
+                        },
+                        {
+                            type: 'bar',
+                            label: '접수 (실적)',
+                            data: [570, 453, 949, 919, 890, 578, 571, 180],
+                            backgroundColor: '#fca5a5',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 4,
+                                color: '#991b1b',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val
+                            }
+                        },
+                        {
+                            type: 'line',
+                            label: '달성율 (%)',
+                            data: [155, 117, 228, 226, 241, 148, 136, 46],
+                            borderColor: '#059669',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#059669',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            tension: 0.15,
+                            yAxisID: 'yPercent',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 8,
+                                color: '#059669',
+                                backgroundColor: '#ffffff',
+                                borderColor: '#059669',
+                                borderWidth: 1.5,
+                                borderRadius: 4,
+                                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                                font: { weight: '900', size: 11 },
+                                formatter: (val) => val + '%'
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 35, bottom: 10 } },
+                    plugins: { legend: { display: true, position: 'bottom' } },
+                    scales: {
+                        yCounts: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            max: 1100,
+                            ticks: { callback: (v) => v + '건' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yPercent: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 270,
+                            ticks: { callback: (v) => v + '%' },
+                            grid: { display: false }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 4. COMBO CHART 3: SELL MY CAR PURCHASES KPI (FULL-WIDTH VERTICAL STACK)
+            const buyComboCtx = document.getElementById('buyComboChart').getContext('2d');
+            new Chart(buyComboCtx, {
+                data: {
+                    labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'],
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: '매입 (KPI)',
+                            data: [74, 78, 84, 82, 74, 78, 84, 78],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'start',
+                                offset: 6,
+                                color: '#1e3a8a',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val
+                            }
+                        },
+                        {
+                            type: 'bar',
+                            label: '매입 (실적)',
+                            data: [105, 81, 131, 158, 155, 84, 82, 27],
+                            backgroundColor: '#fca5a5',
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.7,
+                            yAxisID: 'yCounts',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 4,
+                                color: '#991b1b',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val
+                            }
+                        },
+                        {
+                            type: 'line',
+                            label: '달성율 (%)',
+                            data: [142, 104, 157, 193, 209, 107, 97, 34],
+                            borderColor: '#7c3aed',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#7c3aed',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            tension: 0.15,
+                            yAxisID: 'yPercent',
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                offset: 8,
+                                color: '#7c3aed',
+                                backgroundColor: '#ffffff',
+                                borderColor: '#7c3aed',
+                                borderWidth: 1.5,
+                                borderRadius: 4,
+                                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                                font: { weight: '900', size: 11 },
+                                formatter: (val) => val + '%'
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 35, bottom: 10 } },
+                    plugins: { legend: { display: true, position: 'bottom' } },
+                    scales: {
+                        yCounts: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            max: 230,
+                            ticks: { callback: (v) => v + '건' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yPercent: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 240,
+                            ticks: { callback: (v) => v + '%' },
+                            grid: { display: false }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Load saved PAT token
             const savedToken = localStorage.getItem('gh_pat_token');
             if (savedToken) {
                 document.getElementById('ghToken').value = savedToken;
             }
         });
 
-        // GitHub REST API Direct Update
+        // GITHUB API DIRECT UPDATE
         document.getElementById('updateGithubApiBtn').addEventListener('click', async () => {
             const token = document.getElementById('ghToken').value.trim();
             const statusMsg = document.getElementById('statusMsg');
 
             if (!token) {
-                statusMsg.className = 'status-msg error';
+                statusMsg.className = 'status-alert error';
                 statusMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> GitHub Personal Access Token (PAT)을 입력해주세요. (또는 "깃허브 웹 1-Click 파일 업로드" 버튼 이용)';
                 return;
             }
 
             localStorage.setItem('gh_pat_token', token);
-            statusMsg.className = 'status-msg';
+            statusMsg.className = 'status-alert';
             statusMsg.style.display = 'block';
-            statusMsg.style.color = '#38bdf8';
-            statusMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GitHub API 연동으로 index.html을 업데이트하는 중...';
+            statusMsg.style.color = '#2563eb';
+            statusMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GitHub(sjsj231300/sj2313)에 index.html을 업로드하는 중...';
 
             const owner = 'sjsj231300';
             const repo = 'sj2313';
@@ -1229,7 +1655,6 @@
             const branch = document.getElementById('ghBranch').value.trim() || 'main';
 
             try {
-                // 1. Get SHA if file exists
                 let sha = null;
                 const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
                 const getRes = await fetch(getUrl, {
@@ -1244,7 +1669,6 @@
                     sha = data.sha;
                 }
 
-                // 2. Base64 Encode current document HTML
                 const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
                 const encoder = new TextEncoder();
                 const dataBytes = encoder.encode(htmlContent);
@@ -1254,10 +1678,9 @@
                 }
                 const b64Content = btoa(binaryStr);
 
-                // 3. PUT request
                 const putUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
                 const bodyObj = {
-                    message: `[Auto Sync] Update My Car Weekly Report index.html (${new Date().toISOString().slice(0, 10)})`,
+                    message: `[Vertical Full-Width Charts] Update My Car Report index.html (${new Date().toISOString().slice(0, 10)})`,
                     content: b64Content,
                     branch: branch
                 };
@@ -1274,24 +1697,24 @@
                 });
 
                 if (putRes.ok) {
-                    statusMsg.className = 'status-msg success';
+                    statusMsg.className = 'status-alert success';
                     statusMsg.innerHTML = '<i class="fa-solid fa-circle-check"></i> 성공! index.html이 GitHub(sjsj231300/sj2313)에 성공적으로 업데이트되었습니다! 라이브 URL(https://sjsj231300.github.io/sj2313/)에 수초 내 반영됩니다.';
                 } else {
                     const errData = await putRes.json();
-                    statusMsg.className = 'status-msg error';
+                    statusMsg.className = 'status-alert error';
                     statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 업로드 실패: ${errData.message || '토큰 권한(repo scope)을 확인하세요.'}`;
                 }
             } catch (err) {
-                statusMsg.className = 'status-msg error';
+                statusMsg.className = 'status-alert error';
                 statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 오류 발생: ${err.message}`;
             }
         });
 
         // Copy CLI Commands
         document.getElementById('copyGitCmdBtn').addEventListener('click', () => {
-            const cmds = `git init\ngit remote add origin https://github.com/sjsj231300/sj2313.git\ngit add index.html generate_mycar_weekly_report.py\ngit commit -m "Update My Car Weekly Report index.html"\ngit branch -M main\ngit push -u origin main`;
+            const cmds = `git add index.html generate_mycar_weekly_report.py\ngit commit -m "Update Vertical Full Width Charts My Car Report index.html"\ngit push origin main`;
             navigator.clipboard.writeText(cmds);
-            alert('Git CLI 커밋 및 푸시 명령어가 클립보드에 복사되었습니다!\n\n' + cmds);
+            alert('Git CLI 명령어 클립보드 복사 완료!\n\n' + cmds);
         });
 
         // Download HTML
