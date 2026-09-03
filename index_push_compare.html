@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K Car 앱 푸시 알림 수신 화면 3종 비교 대시보드</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kcar-red: #E5002C;
+            --kcar-red-dark: #C40026;
+            --gray-900: #191919;
+            --gray-800: #222222;
+            --gray-700: #444444;
+            --gray-600: #666666;
+            --gray-400: #AAAAAA;
+            --gray-200: #EAEAEA;
+            --gray-100: #F4F5F7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        body {
+            background-color: #0F1216;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .dash-header {
+            background: #181C24;
+            border-bottom: 1px solid #2B303C;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .kcar-pill {
+            background: var(--kcar-red);
+            color: #FFF;
+            font-weight: 900;
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .dash-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .dash-desc {
+            font-size: 13px;
+            color: #9DA3AF;
+        }
+        .file-links-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .direct-link-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: #252A36;
+            border: 1px solid #3A4152;
+            color: #E2E8F0;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .direct-link-btn:hover {
+            background: var(--kcar-red);
+            border-color: var(--kcar-red);
+            color: #FFFFFF;
+        }
+
+        /* 3-Column Grid Preview Container */
+        .preview-board {
+            display: grid;
+            grid-template-columns: 420px 420px 1fr;
+            gap: 24px;
+            padding: 28px 30px;
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .preview-col {
+            display: flex;
+            flex-direction: column;
+            background: #181C24;
+            border: 1px solid #2B303C;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .col-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #2B303C;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1F242F;
+        }
+        .col-badge-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .num-badge {
+            width: 24px;
+            height: 24px;
+            background: var(--kcar-red);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .col-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+        .col-target {
+            font-size: 12px;
+            color: #9DA3AF;
+        }
+        .btn-new-tab {
+            font-size: 12px;
+            color: #9DA3AF;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #252A36;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-new-tab:hover {
+            color: #FFFFFF;
+            background: #3A4152;
+        }
+
+        .col-frame-wrap {
+            flex: 1;
+            min-height: 860px;
+            background: #ECEEF2;
+            position: relative;
+        }
+        .col-frame-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="dash-header">
+        <div class="header-title-group">
+            <span class="kcar-pill">K Car</span>
+            <div>
+                <h1 class="dash-title">차량 입고 알림 수신 화면 3종 비교 대시보드</h1>
+                <p class="dash-desc">기획서 및 첨부 이미지(5-1, 5-2, 5-3) 기반 3가지 접속 환경별 단독 구현</p>
+            </div>
+        </div>
+        <div class="file-links-group">
+            <a href="push_setting_app.html" target="_blank" class="direct-link-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> 1. 앱 단독 열기</a>
+            <a href="push_setting_mobile_web.html" target="_blank" class="direct-link-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> 2. 모바일 웹 단독 열기</a>
+            <a href="push_setting_pc_web.html" target="_blank" class="direct-link-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. PC 웹 단독 열기</a>
+        </div>
+    </header>
+
+    <main class="preview-board">
+        <!-- 1. 앱 접속 (앱 보유 고객) -->
+        <section class="preview-col">
+            <div class="col-header">
+                <div class="col-badge-title">
+                    <span class="num-badge">1</span>
+                    <div>
+                        <div class="col-title">앱 접속 시</div>
+                        <div class="col-target">앱을 보유하고 있는 고객</div>
+                    </div>
+                </div>
+                <a href="push_setting_app.html" target="_blank" class="btn-new-tab">새창 <i class="fa-solid fa-external-link"></i></a>
+            </div>
+            <div class="col-frame-wrap">
+                <iframe src="push_setting_app.html"></iframe>
+            </div>
+        </section>
+
+        <!-- 2. 모바일 웹 접속 (앱 미보유 고객) -->
+        <section class="preview-col">
+            <div class="col-header">
+                <div class="col-badge-title">
+                    <span class="num-badge">2</span>
+                    <div>
+                        <div class="col-title">모바일 웹 접속 시</div>
+                        <div class="col-target">앱을 보유하고 있지 않은 고객</div>
+                    </div>
+                </div>
+                <a href="push_setting_mobile_web.html" target="_blank" class="btn-new-tab">새창 <i class="fa-solid fa-external-link"></i></a>
+            </div>
+            <div class="col-frame-wrap">
+                <iframe src="push_setting_mobile_web.html"></iframe>
+            </div>
+        </section>
+
+        <!-- 3. PC 웹 접속 (앱 미보유 고객) -->
+        <section class="preview-col">
+            <div class="col-header">
+                <div class="col-badge-title">
+                    <span class="num-badge">3</span>
+                    <div>
+                        <div class="col-title">PC 웹 접속 시</div>
+                        <div class="col-target">앱을 보유하고 있지 않은 고객</div>
+                    </div>
+                </div>
+                <a href="push_setting_pc_web.html" target="_blank" class="btn-new-tab">새창 <i class="fa-solid fa-external-link"></i></a>
+            </div>
+            <div class="col-frame-wrap">
+                <iframe src="push_setting_pc_web.html"></iframe>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
