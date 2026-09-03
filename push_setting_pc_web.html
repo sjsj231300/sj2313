@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[PC 웹 접속] K Car 알림 받는 방법 설정</title>
+    <!-- Font Awesome & Pretendard -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kcar-red: #E5002C;
+            --kcar-red-dark: #C40026;
+            --kcar-red-light: #FFF0F2;
+            --gray-900: #1A1A1A;
+            --gray-800: #2B2D31;
+            --gray-700: #4E525B;
+            --gray-600: #6B7280;
+            --gray-500: #9CA3AF;
+            --gray-400: #D1D5DB;
+            --gray-300: #E5E7EB;
+            --gray-200: #F1F3F5;
+            --gray-100: #F8F9FA;
+            --android-color: #0F9D58;
+            --apple-color: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #F4F5F8;
+            min-height: 100vh;
+            color: var(--gray-900);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Type Switcher Bar */
+        .type-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #FFFFFF;
+            padding: 10px 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #EBECEF;
+        }
+        .type-nav-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .type-btn {
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--gray-600);
+            background: #F0F2F5;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .type-btn.active {
+            background: var(--kcar-red);
+            color: #FFFFFF;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(229, 0, 44, 0.35);
+        }
+        .type-btn:hover:not(.active) {
+            background: #E2E5EB;
+            color: var(--gray-900);
+        }
+
+        /* PC Web Header */
+        .pc-header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EAEAEA;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        .kcar-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .kcar-logo-badge {
+            width: 32px;
+            height: 32px;
+            background: var(--kcar-red);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-weight: 900;
+            font-size: 18px;
+        }
+        .kcar-logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--kcar-red);
+            letter-spacing: -1px;
+        }
+        .pc-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .pc-nav li a {
+            text-decoration: none;
+            color: var(--gray-800);
+            font-size: 16px;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+        .pc-nav li a:hover, .pc-nav li a.active {
+            color: var(--kcar-red);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .search-box {
+            position: relative;
+            width: 260px;
+        }
+        .search-box input {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #DFE2E6;
+            border-radius: 20px;
+            padding: 0 38px 0 16px;
+            font-size: 13px;
+            outline: none;
+        }
+        .search-box i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+        .user-links {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        .user-links a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .user-links a:hover {
+            color: var(--kcar-red);
+        }
+
+        /* Main Desktop Container */
+        .pc-main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+        }
+        .page-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+        }
+        .page-breadcrumb a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .page-header-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        /* Desktop Tabs */
+        .pc-tabs {
+            display: flex;
+            border-bottom: 2px solid #E5E7EB;
+            margin-bottom: 24px;
+        }
+        .pc-tab-item {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            position: relative;
+        }
+        .pc-tab-item.active {
+            color: var(--kcar-red);
+            font-weight: 800;
+        }
+        .pc-tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: var(--kcar-red);
+        }
+
+        /* Background Notification Vehicle Card */
+        .alert-vehicle-table {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E5E7EB;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .vehicle-info-col {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .car-thumb {
+            width: 110px;
+            height: 78px;
+            background: #F1F3F5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #A0A5AD;
+            font-size: 32px;
+        }
+        .vehicle-meta h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+        .vehicle-meta p {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        .btn-open-popup {
+            padding: 10px 20px;
+            background: #FFFFFF;
+            border: 1.5px solid var(--kcar-red);
+            color: var(--kcar-red);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-open-popup:hover {
+            background: var(--kcar-red-light);
+        }
+
+        /* Dim Backdrop for Center Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.62);
+            backdrop-filter: blur(2px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+        .modal-backdrop.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* PC Web Center Modal Dialog */
+        .modal-dialog {
+            background: #FFFFFF;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transform: scale(1);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-backdrop.hidden .modal-dialog {
+            transform: scale(0.95);
+        }
+
+        /* Modal Header */
+        .modal-header {
+            padding: 24px 28px 18px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 1px solid #F0F1F3;
+        }
+        .modal-main-title {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .modal-car-name {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--kcar-red);
+            letter-spacing: -0.6px;
+            line-height: 1.25;
+        }
+        .modal-alert-done {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gray-900);
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+        .btn-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 2px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .btn-modal-close:hover {
+            color: var(--gray-900);
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 22px 28px 26px;
+        }
+
+        /* 차량 알림 서브 안내 박스 */
+        .alert-sub-guide-box {
+            background: #FFF7F8;
+            border: 1.5px solid #FFD8DF;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .alert-icon-wrap {
+            width: 40px;
+            height: 40px;
+            background: #FFFFFF;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--kcar-red);
+            font-size: 19px;
+            box-shadow: 0 2px 8px rgba(229, 0, 44, 0.12);
+            flex-shrink: 0;
+        }
+        .alert-sub-desc {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        .badge-push-highlight {
+            color: var(--kcar-red);
+            font-weight: 800;
+            background: #FFE5E9;
+            padding: 2px 8px;
+        }
+
+        /* 안내 가이드 카드 */
+        .guide-box {
+            background: #F8F9FB;
+            border: 1px solid #EBECEF;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+        .guide-box-header {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .guide-box-header i {
+            color: var(--kcar-red);
+        }
+        .guide-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .guide-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-size: 13px;
+            color: var(--gray-700);
+            line-height: 1.45;
+        }
+        .step-circle {
+            width: 18px;
+            height: 18px;
+            background: var(--kcar-red);
+            color: #FFFFFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* CTA 버튼: [K Car 앱 다운로드 바로가기 ▶] */
+        .btn-app-download-cta {
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(135deg, #E5002C 0%, #BA0024 100%);
+            color: #FFFFFF;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15.5px;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(229, 0, 44, 0.28);
+            transition: all 0.2s;
+            margin-bottom: 22px;
+        }
+        .btn-app-download-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(229, 0, 44, 0.35);
+        }
+
+        /* QR Code Section (안드로이드, 애플 각각 앱스토어 연결) */
+        .qr-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            text-align: center;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .qr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .qr-card {
+            border: 1.5px solid #E8EAEF;
+            border-radius: 14px;
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #FFFFFF;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .qr-card:hover {
+            border-color: #B4B9C4;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        }
+        .qr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+        }
+        .qr-badge.android i {
+            color: var(--android-color);
+            font-size: 16px;
+        }
+        .qr-badge.apple i {
+            color: var(--apple-color);
+            font-size: 16px;
+        }
+
+        /* High quality SVG QR Box */
+        .qr-image-box {
+            width: 130px;
+            height: 130px;
+            padding: 8px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.04);
+        }
+        .qr-image-box svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qr-scan-guide {
+            font-size: 11px;
+            color: var(--gray-500);
+            line-height: 1.35;
+            margin-bottom: 10px;
+        }
+        .btn-qr-link {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--gray-700);
+            text-decoration: none;
+            padding: 5px 12px;
+            background: #F3F4F6;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-qr-link:hover {
+            background: #E5E7EB;
+            color: var(--gray-900);
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: 16px 28px 22px;
+            background: #FAFAFC;
+            border-top: 1px solid #F0F1F3;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-modal-cancel {
+            padding: 11px 22px;
+            border: 1px solid #D0D4DB;
+            background: #FFFFFF;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        .btn-modal-confirm {
+            padding: 11px 26px;
+            background: var(--kcar-red);
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-modal-confirm:hover {
+            background: var(--kcar-red-dark);
+        }
+
+        /* 5-3 저장완료 토스트 팝업 (Toast Popup) */
+        .toast-popup {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: rgba(30, 30, 30, 0.94);
+            color: #FFFFFF;
+            padding: 14px 24px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3000;
+            white-space: nowrap;
+        }
+        .toast-popup.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            background: #10B981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Mode Switcher Bar -->
+    <nav class="type-nav-bar">
+        <span class="type-nav-label"><i class="fa-solid fa-layer-group"></i> 화면 전환:</span>
+        <a href="push_setting_app.html" class="type-btn"><i class="fa-solid fa-mobile-screen"></i> 1. 앱 접속 (앱 보유)</a>
+        <a href="push_setting_mobile_web.html" class="type-btn"><i class="fa-solid fa-globe"></i> 2. 모바일 웹 접속 (앱 미보유)</a>
+        <a href="push_setting_pc_web.html" class="type-btn active"><i class="fa-solid fa-desktop"></i> 3. PC 웹 접속 (앱 미보유)</a>
+    </nav>
+
+    <!-- PC Desktop Web Header -->
+    <header class="pc-header">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="#" class="kcar-logo-link">
+                    <div class="kcar-logo-badge">K</div>
+                    <span class="kcar-logo-text">K Car</span>
+                </a>
+                <ul class="pc-nav">
+                    <li><a href="#">내차사기</a></li>
+                    <li><a href="#">내차팔기</a></li>
+                    <li><a href="#">렌트</a></li>
+                    <li><a href="#">직영점안내</a></li>
+                    <li><a href="#" class="active">찜·알림차량</a></li>
+                </ul>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="차량명, 모델명으로 검색">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="user-links">
+                    <a href="#">홍길동 고객님</a>
+                    <span>|</span>
+                    <a href="#">로그아웃</a>
+                    <span>|</span>
+                    <a href="#">고객센터</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- PC Web Main Body -->
+    <main class="pc-main-container">
+        <div class="page-breadcrumb">
+            <a href="#">홈</a> &gt; <a href="#">마이페이지</a> &gt; <span>알림차량</span>
+        </div>
+
+        <div class="page-header-row">
+            <h1 class="page-title">찜·알림차량</h1>
+            <button class="btn-open-popup" onclick="openModal()"><i class="fa-solid fa-sliders"></i> 알림 받는 방법 설정</button>
+        </div>
+
+        <div class="pc-tabs">
+            <div class="pc-tab-item">찜한차량 (12)</div>
+            <div class="pc-tab-item">최근본차량 (5)</div>
+            <div class="pc-tab-item active">알림차량 (1)</div>
+        </div>
+
+        <!-- 알림 차량 카드 -->
+        <div class="alert-vehicle-table">
+            <div class="vehicle-info-col">
+                <div class="car-thumb">
+                    <i class="fa-solid fa-car-side"></i>
+                </div>
+                <div class="vehicle-meta">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <span style="background: #FFF1F2; color: #E5002C; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FFE0E3;">
+                            <i class="fa-solid fa-bell"></i> 입고알림 신청중
+                        </span>
+                        <span style="font-size: 12px; color: #999;">신청일: 2026.09.03</span>
+                    </div>
+                    <h3>현대 그랜저 IG 2.4 프리미엄</h3>
+                    <p>2019년형 · 52,000km · 가솔린 · 무사고 · 2,150만원 상당</p>
+                </div>
+            </div>
+            <button class="btn-open-popup" onclick="openModal()">수신 설정 확인 &gt;</button>
+        </div>
+    </main>
+
+    <!-- 3. PC 웹 Center Modal Dialog (앱 미보유 고객용) -->
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal-dialog">
+            <!-- Modal Header: '그랜저 IG' 알림 설정이 완료되었어요. -->
+            <div class="modal-header">
+                <div class="modal-main-title">
+                    <span class="modal-car-name">'그랜저 IG'</span>
+                    <span class="modal-alert-done">알림 설정이 완료되었어요.</span>
+                </div>
+                <button class="btn-modal-close" onclick="closeModal()" title="닫기"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- 차량 알림 서브 안내 박스 -->
+                <div class="alert-sub-guide-box">
+                    <div class="alert-icon-wrap">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div class="alert-sub-desc">
+                        입고 알림은 <span class="badge-push-highlight">'앱 푸시(App Push)'</span>로 발송됩니다.
+                    </div>
+                </div>
+
+                <!-- 2단계 가이드 박스 -->
+                <div class="guide-box">
+                    <div class="guide-box-header">
+                        <i class="fa-solid fa-circle-check"></i> 푸시 알림 수신을 위해 꼭 진행해 주세요
+                    </div>
+                    <ul class="guide-list">
+                        <li>
+                            <span class="step-circle">1</span>
+                            <div><strong>K Car 앱</strong>을 다운받아 주세요.</div>
+                        </li>
+                        <li>
+                            <span class="step-circle">2</span>
+                            <div><strong>앱 푸시 수신동의</strong> 설정을 해주세요. <span style="color: #888;">(휴대폰 설정 및 K Car 앱 內 알림받기 설정)</span></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- [K Car 앱 다운로드 바로가기▶] CTA 버튼 -->
+                <a href="#qr-container" class="btn-app-download-cta" onclick="smoothScrollToQR()">
+                    <span>K Car 앱 다운로드 바로가기</span>
+                    <i class="fa-solid fa-play" style="font-size: 11px;"></i>
+                </a>
+
+                <!-- (QR - 안드로이드, 애플 각각 앱스토어 연결) -->
+                <div class="qr-section-title" id="qr-container">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>스마트폰 카메라로 QR 코드를 스캔하세요</span>
+                </div>
+
+                <div class="qr-grid">
+                    <!-- 안드로이드 QR 코드 카드 -->
+                    <div class="qr-card">
+                        <div class="qr-badge android">
+                            <i class="fa-brands fa-google-play"></i>
+                            <span>안드로이드 (Google Play)</span>
+                        </div>
+                        <div class="qr-image-box">
+                            <!-- Crisp Vector QR Code for Android -->
+                            <svg viewBox="0 0 100 100" fill="currentColor">
+                                <path d="M5 5h30v30H5zM10 10v20h20V10zM15 15h10v10H15zM65 5h30v30H65zM70 10v20h20V10zM75 15h10v10H75zM5 65h30v30H5zM10 70v20h20V70zM15 75h10v10H15zM45 10h10v10H45zM45 25h10v10H45zM40 45h20v10H40zM20 45h15v10H20zM65 45h15v10H65zM45 65h10v25H45zM65 65h10v10H65zM80 65h15v10H80zM65 80h25v15H65zM25 60h10v5H25z"/>
+                                <!-- Center Android Mini Logo -->
+                                <circle cx="50" cy="50" r="11" fill="#FFFFFF"/>
+                                <circle cx="50" cy="50" r="9" fill="#0F9D58"/>
+                                <path d="M47 48a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 4h2v1h-2z" fill="#FFFFFF"/>
+                            </svg>
+                        </div>
+                        <div class="qr-scan-guide">카메라로 비추면<br>Google Play로 연결됩니다.</div>
+                        <a href="https://play.google.com/store" target="_blank" class="btn-qr-link">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> 스토어 바로가기
+                        </a>
+                    </div>
+
+                    <!-- 애플 iOS QR 코드 카드 -->
+                    <div class="qr-card">
+                        <div class="qr-badge apple">
+                            <i class="fa-brands fa-apple"></i>
+                            <span>애플 iOS (App Store)</span>
+                        </div>
+                        <div class="qr-image-box">
+                            <!-- Crisp Vector QR Code for iOS -->
+                            <svg viewBox="0 0 100 100" fill="currentColor">
+                                <path d="M5 5h30v30H5zM10 10v20h20V10zM15 15h10v10H15zM65 5h30v30H65zM70 10v20h20V10zM75 15h10v10H75zM5 65h30v30H5zM10 70v20h20V70zM15 75h10v10H15zM45 5h10v15H45zM40 30h15v10H40zM15 45h20v10H15zM45 45h10v10H45zM65 45h25v10H65zM45 65h10v10H45zM60 65h15v15H60zM80 65h15v30H80zM45 80h10v15H45zM60 85h15v10H60z"/>
+                                <!-- Center Apple Mini Logo -->
+                                <circle cx="50" cy="50" r="11" fill="#FFFFFF"/>
+                                <circle cx="50" cy="50" r="9" fill="#000000"/>
+                                <path d="M49 46.5c.3-.4.5-.9.4-1.5-.5 0-1 .4-1.3.8-.3.3-.5.9-.4 1.4.6.1 1-.3 1.3-.7zm2.4 4.5c-.3.4-.6.8-1 .8-.4 0-.6-.3-1.1-.3-.5 0-.7.3-1.1.3-.4 0-.8-.4-1.1-.9-.6-1.1-.7-2.3 0-3.3.4-.6 1-.9 1.6-.9.4 0 .7.3 1 .3.3 0 .7-.3 1.1-.3.5 0 1 .3 1.3.7-.9.6-.8 1.9.2 2.3-.3.4-.6.9-1 1z" fill="#FFFFFF"/>
+                            </svg>
+                        </div>
+                        <div class="qr-scan-guide">카메라로 비추면<br>App Store로 연결됩니다.</div>
+                        <a href="https://www.apple.com/app-store/" target="_blank" class="btn-qr-link">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> 스토어 바로가기
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="closeModal()">닫기</button>
+                <button class="btn-modal-confirm" onclick="handleConfirm()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5-3 저장완료 토스트 팝업 -->
+    <div class="toast-popup" id="toastPopup">
+        <div class="toast-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span>알림 받는 방법을 저장했어요.</span>
+    </div>
+
+    <script>
+        // Modal Controls
+        function openModal() {
+            document.getElementById('modalBackdrop').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.add('hidden');
+        }
+
+        // Close when clicking outside modal box
+        document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Confirm button action
+        function handleConfirm() {
+            closeModal();
+            setTimeout(() => {
+                showToast();
+            }, 200);
+        }
+
+        // Smooth scroll to QR
+        function smoothScrollToQR() {
+            document.getElementById('qr-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Toast popup show & auto hide
+        let toastTimeout;
+        function showToast() {
+            const toast = document.getElementById('toastPopup');
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
