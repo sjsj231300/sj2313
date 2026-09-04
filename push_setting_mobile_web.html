@@ -451,31 +451,20 @@
             color: var(--gray-900);
         }
 
-        /* 메인 CTA: K Car 앱 다운로드 바로가기 버튼 */
-        .btn-app-download-main {
-            width: 100%;
-            padding: 13px 16px;
-            background: linear-gradient(135deg, #E5002C 0%, #BA0024 100%);
-            color: #FFFFFF;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 14.5px;
+        /* K Car 앱 다운로드 바로가기 소제목 텍스트 */
+        .store-subheading {
+            font-size: 13.5px;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(229, 0, 44, 0.28);
-            margin-bottom: 12px;
-            transition: all 0.2s ease;
-        }
-        .btn-app-download-main:hover {
-            opacity: 0.96;
-            transform: translateY(-1px);
-        }
-        .btn-app-download-main .download-left {
+            color: var(--gray-900);
+            margin: 14px 2px 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
+            letter-spacing: -0.2px;
+        }
+        .store-subheading i {
+            color: var(--kcar-red);
+            font-size: 10px;
         }
 
         /* 안드로이드 / 애플 각각 앱스토어 버튼 */
@@ -827,14 +816,11 @@
                     </div>
                 </div>
 
-                <!-- [K Car 앱 다운로드 바로가기▶] 메인 CTA 버튼 -->
-                <a href="#download-store" class="btn-app-download-main" onclick="alert('스마트폰 기기 OS에 맞는 앱스토어 다운로드 페이지로 이동합니다.')">
-                    <div class="download-left">
-                        <i class="fa-solid fa-download"></i>
-                        <span>K Car 앱 다운로드 바로가기</span>
-                    </div>
-                    <i class="fa-solid fa-play" style="font-size: 11px;"></i>
-                </a>
+                <!-- [K Car 앱 다운로드 바로가기▶] 소제목 텍스트 (버튼 아님) -->
+                <div class="store-subheading">
+                    <span>K Car 앱 다운로드 바로가기</span>
+                    <i class="fa-solid fa-play"></i>
+                </div>
 
                 <!-- 안드로이드 / 애플 각각 앱스토어 연결 버튼 -->
                 <div class="store-btn-grid" id="download-store">

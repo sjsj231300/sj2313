@@ -403,50 +403,353 @@
             margin-bottom: 16px;
         }
         .guide-step-title {
-            font-size: 12px;
+            font-size: 12.5px;
             font-weight: 700;
             color: var(--gray-800);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
         .guide-step-title i {
             color: var(--kcar-red);
         }
-        .step-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
+        .step-card {
+            background: #FFFFFF;
+            border: 1px solid #E4E6EA;
+            border-radius: 10px;
+            padding: 10px 12px;
             margin-bottom: 8px;
-            font-size: 11.5px;
-            color: var(--gray-700);
-            line-height: 1.45;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
         }
-        .step-item:last-child {
+        .step-card:last-child {
             margin-bottom: 0;
         }
+        .step-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .step-title-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
         .step-num-badge {
-            background: #E8EBF0;
-            color: var(--gray-800);
+            background: var(--kcar-red);
+            color: #FFFFFF;
             font-size: 10px;
             font-weight: 800;
-            width: 17px;
-            height: 17px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-top: 1px;
         }
-        .step-path {
-            font-weight: 600;
+        .step-app-name {
+            font-size: 13px;
+            font-weight: 700;
             color: var(--gray-900);
+        }
+        .btn-step-action {
+            background: #FFF0F2;
+            color: var(--kcar-red);
+            border: 1px solid #FFCDD2;
+            border-radius: 6px;
+            padding: 4px 9px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-step-action:hover {
+            background: var(--kcar-red);
+            color: #FFFFFF;
+            border-color: var(--kcar-red);
+        }
+        .step-card-path {
+            font-size: 11.5px;
+            color: var(--gray-600);
+            line-height: 1.45;
+            padding-left: 2px;
         }
         .step-highlight {
             color: var(--kcar-red);
             font-weight: 700;
+        }
+
+        /* Sub Page Views (K Car 앱 설정 & 휴대폰 설정 화면) */
+        .sub-screen-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #F5F6F8;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sub-screen-view.active {
+            transform: translateX(0);
+        }
+        .sub-status-bar {
+            background: #FFFFFF;
+        }
+        .sub-screen-header {
+            height: 48px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #EEEEEE;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+        .btn-sub-back {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #111;
+            cursor: pointer;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .sub-screen-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+        }
+        .sub-screen-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        /* Settings Card & Toggle Switch (K Car Style) */
+        .setting-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray-500);
+            margin: 6px 4px 8px;
+            text-transform: uppercase;
+        }
+        .setting-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #EAECEF;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .setting-label-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .setting-main-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .setting-sub-label {
+            font-size: 11.5px;
+            color: var(--gray-500);
+            line-height: 1.4;
+        }
+        .setting-divider {
+            height: 1px;
+            background: #F0F1F3;
+            margin: 12px 0;
+        }
+        .setting-info-box {
+            background: #FAFAFB;
+            border: 1px solid #EAECEF;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--gray-600);
+            line-height: 1.45;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .setting-info-box i {
+            color: var(--kcar-red);
+            font-size: 14px;
+            margin-top: 1px;
+        }
+        .btn-sub-complete {
+            width: 100%;
+            height: 46px;
+            background: var(--kcar-red);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-sub-complete:hover {
+            background: var(--kcar-red-dark);
+        }
+
+        /* iOS Switch Toggle */
+        .kcar-switch, .os-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .kcar-switch input, .os-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .kcar-slider, .os-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E2E4E8;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+        .kcar-slider:before, .os-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .kcar-switch input:checked + .kcar-slider {
+            background-color: var(--kcar-red);
+        }
+        .kcar-switch input:checked + .kcar-slider:before {
+            transform: translateX(20px);
+        }
+        .os-switch input:checked + .os-slider {
+            background-color: #34C759;
+        }
+        .os-switch input:checked + .os-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Phone OS Settings View Specific Styles */
+        .os-header {
+            background: #F2F2F7;
+            border-bottom: 1px solid #D1D1D6;
+        }
+        .os-back {
+            color: #007AFF;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .os-body {
+            background: #F2F2F7;
+        }
+        .os-card {
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+        }
+        .os-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .os-row-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111;
+        }
+        .os-row-value {
+            font-size: 14px;
+            color: #8E8E93;
+        }
+        .os-section-title {
+            font-size: 12px;
+            color: #6C6C70;
+            margin: 4px 4px 8px;
+            text-transform: uppercase;
+        }
+        .os-alert-type-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .os-type-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: #333;
+        }
+        .os-type-preview {
+            width: 48px;
+            height: 64px;
+            background: #E5E5EA;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #007AFF;
+        }
+        .os-check {
+            color: #007AFF;
+            font-size: 14px;
+        }
+        .os-divider {
+            height: 1px;
+            background: #E5E5EA;
+            margin: 10px 0;
+        }
+        .os-info-desc {
+            font-size: 11.5px;
+            color: #8E8E93;
+            line-height: 1.45;
+            margin: 6px 6px 18px;
+        }
+        .btn-sub-complete.os-complete {
+            background: #007AFF;
+        }
+        .btn-sub-complete.os-complete:hover {
+            background: #0056B3;
         }
 
         /* Notification Option Cards */
@@ -736,23 +1039,43 @@
                     </div>
                 </div>
 
-                <!-- 푸시 설정 경로 안내 (휴대폰 설정 & K Car 앱 내 설정) -->
+                <!-- 푸시 설정 경로 안내 (1번: K Car 앱 설정 / 2번: 휴대폰 설정) -->
                 <div class="guide-step-container">
                     <div class="guide-step-title">
                         <i class="fa-solid fa-circle-check"></i> 푸시 알림 ON 설정 방법 안내
                     </div>
                     
-                    <div class="step-item">
-                        <span class="step-num-badge">1</span>
-                        <div>
-                            <span class="step-path">휴대폰 설정</span> &gt; 앱 &gt; 알림관리 &gt; <span class="step-highlight">앱 푸시 받기 On</span>
+                    <!-- 1번: K Car 앱 설정 -->
+                    <div class="step-card">
+                        <div class="step-card-top">
+                            <div class="step-title-group">
+                                <span class="step-num-badge">1</span>
+                                <span class="step-app-name">K Car 앱 설정</span>
+                            </div>
+                            <button class="btn-step-action" onclick="openKcarPushPage()">
+                                <span>앱 푸시 설정 확인하기</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="step-card-path">
+                            <span class="step-path">우측상단 햄버거 메뉴(☰) &gt; 톱니바퀴(⚙️) &gt; 알림/메시지정보</span> <span class="step-highlight">'푸시알림 사용하기' On</span>
                         </div>
                     </div>
 
-                    <div class="step-item">
-                        <span class="step-num-badge">2</span>
-                        <div>
-                            <span class="step-path">K Car 앱</span> &gt; 우측상단 햄버거 메뉴(☰) &gt; 톱니바퀴(⚙️) &gt; 알림/메시지정보 <span class="step-highlight">'푸시알림 사용하기' On</span>
+                    <!-- 2번: 휴대폰 설정 -->
+                    <div class="step-card">
+                        <div class="step-card-top">
+                            <div class="step-title-group">
+                                <span class="step-num-badge">2</span>
+                                <span class="step-app-name">휴대폰 설정</span>
+                            </div>
+                            <button class="btn-step-action" onclick="openPhoneSettingPage()">
+                                <span>앱 푸시 설정 확인하기</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="step-card-path">
+                            <span class="step-path">휴대폰 설정 &gt; 앱 &gt; 알림관리 &gt;</span> <span class="step-highlight">앱 푸시 받기 On</span>
                         </div>
                     </div>
                 </div>
@@ -762,24 +1085,165 @@
             </div>
         </div>
 
+        <!-- 1번 연결 화면: K Car 앱 '푸시알림 사용하기' 서브 페이지 -->
+        <div class="sub-screen-view" id="kcarAppPushPage">
+            <!-- iOS Status Bar -->
+            <div class="status-bar sub-status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-full"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="sub-screen-header">
+                <button class="btn-sub-back" onclick="closeSubPages()"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="sub-screen-title">알림 / 메시지 정보</div>
+                <div style="width: 24px;"></div>
+            </div>
+
+            <!-- Body -->
+            <div class="sub-screen-body">
+                <div class="setting-group-title">서비스 알림</div>
+                <div class="setting-card">
+                    <div class="setting-row">
+                        <div class="setting-label-box">
+                            <div class="setting-main-label">푸시알림 사용하기</div>
+                            <div class="setting-sub-label">차량 입고 알림, 내차관리, 맞춤 매물 알림을 푸시로 전송합니다.</div>
+                        </div>
+                        <label class="kcar-switch">
+                            <input type="checkbox" checked id="toggleKcarPush" onchange="showCustomToast('K Car 앱 푸시알림이 ' + (this.checked ? '켜졌어요.' : '꺼졌어요.'))">
+                            <span class="kcar-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-divider"></div>
+                    <div class="setting-row">
+                        <div class="setting-label-box">
+                            <div class="setting-main-label">야간 푸시 제한 (21:00 ~ 08:00)</div>
+                            <div class="setting-sub-label">심야 시간대에는 방해되지 않도록 알림을 무음 처리합니다.</div>
+                        </div>
+                        <label class="kcar-switch">
+                            <input type="checkbox" id="toggleNightPush">
+                            <span class="kcar-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group-title">혜택 및 마케팅 정보</div>
+                <div class="setting-card">
+                    <div class="setting-row">
+                        <div class="setting-label-box">
+                            <div class="setting-main-label">이벤트 및 혜택 알림</div>
+                            <div class="setting-sub-label">할인 쿠폰, 특가 기획전 알림 (수신동의: 2026.09.04)</div>
+                        </div>
+                        <label class="kcar-switch">
+                            <input type="checkbox" checked id="toggleEventPush">
+                            <span class="kcar-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>휴대폰 기기 설정에서 K Car 앱 알림이 꺼져 있을 경우 푸시 알림이 발송되지 않습니다.</span>
+                </div>
+
+                <button class="btn-sub-complete" onclick="closeSubPages()">설정 확인 완료</button>
+            </div>
+        </div>
+
+        <!-- 2번 연결 화면: 휴대폰 '설정' 앱 알림관리 서브 페이지 -->
+        <div class="sub-screen-view" id="phoneOsSettingPage">
+            <!-- iOS Status Bar -->
+            <div class="status-bar sub-status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-full"></i>
+                </div>
+            </div>
+
+            <!-- Header (OS Style) -->
+            <div class="sub-screen-header os-header">
+                <button class="btn-sub-back os-back" onclick="closeSubPages()"><i class="fa-solid fa-chevron-left"></i> K Car</button>
+                <div class="sub-screen-title">알림</div>
+                <div style="width: 24px;"></div>
+            </div>
+
+            <!-- Body (OS Style) -->
+            <div class="sub-screen-body os-body">
+                <div class="os-card">
+                    <div class="os-row">
+                        <span class="os-row-title">알림 허용</span>
+                        <label class="os-switch">
+                            <input type="checkbox" checked id="toggleOsPush" onchange="showCustomToast('휴대폰 알림 허용이 ' + (this.checked ? '켜졌어요.' : '꺼졌어요.'))">
+                            <span class="os-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="os-section-title">경고 표시 방식</div>
+                <div class="os-card os-alert-type-grid">
+                    <div class="os-type-item">
+                        <div class="os-type-preview"><i class="fa-regular fa-clone"></i></div>
+                        <span>잠금 화면</span>
+                        <i class="fa-solid fa-circle-check os-check"></i>
+                    </div>
+                    <div class="os-type-item">
+                        <div class="os-type-preview"><i class="fa-solid fa-bars-staggered"></i></div>
+                        <span>알림 센터</span>
+                        <i class="fa-solid fa-circle-check os-check"></i>
+                    </div>
+                    <div class="os-type-item">
+                        <div class="os-type-preview"><i class="fa-solid fa-window-maximize"></i></div>
+                        <span>배너</span>
+                        <i class="fa-solid fa-circle-check os-check"></i>
+                    </div>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-row">
+                        <span class="os-row-title">사운드</span>
+                        <span class="os-row-value">켬</span>
+                    </div>
+                    <div class="os-divider"></div>
+                    <div class="os-row">
+                        <span class="os-row-title">배지</span>
+                        <span class="os-row-value">켬</span>
+                    </div>
+                </div>
+
+                <div class="os-info-desc">
+                    K Car 앱의 '그랜저 IG' 실시간 입고 알림을 받으시려면 '알림 허용'이 On으로 설정되어 있어야 합니다.
+                </div>
+
+                <button class="btn-sub-complete os-complete" onclick="closeSubPages()">설정 확인 완료</button>
+            </div>
+        </div>
+
         <!-- 5-3 저장완료 토스트 팝업 (Toast Popup) -->
         <div class="toast-popup" id="toastPopup">
             <div class="toast-icon">
                 <i class="fa-solid fa-check"></i>
             </div>
-            <span>알림 받는 방법을 저장했어요.</span>
+            <span id="toastMsgText">알림 받는 방법을 저장했어요.</span>
         </div>
     </div>
 
     <!-- Demo Control Bar -->
     <div class="demo-bar">
         <button class="btn-demo-open" onclick="openBottomSheet()"><i class="fa-solid fa-arrow-up-from-bracket"></i> 팝업 다시 열기</button>
-        <button class="btn-demo-open" onclick="showToast()"><i class="fa-solid fa-bell"></i> 토스트 팝업 테스트</button>
+        <button class="btn-demo-open" onclick="openKcarPushPage()"><i class="fa-solid fa-gear"></i> K Car 앱 설정 페이지 보기</button>
+        <button class="btn-demo-open" onclick="openPhoneSettingPage()"><i class="fa-solid fa-mobile-screen"></i> 휴대폰 설정 페이지 보기</button>
     </div>
 
     <script>
         // Bottom sheet open/close
         function openBottomSheet() {
+            closeSubPages();
             document.getElementById('sheetBackdrop').classList.remove('hidden');
         }
 
@@ -794,23 +1258,48 @@
             }
         });
 
+        // Sub pages open/close
+        function openKcarPushPage() {
+            closeBottomSheet();
+            document.getElementById('phoneOsSettingPage').classList.remove('active');
+            document.getElementById('kcarAppPushPage').classList.add('active');
+        }
+
+        function openPhoneSettingPage() {
+            closeBottomSheet();
+            document.getElementById('kcarAppPushPage').classList.remove('active');
+            document.getElementById('phoneOsSettingPage').classList.add('active');
+        }
+
+        function closeSubPages() {
+            document.getElementById('kcarAppPushPage').classList.remove('active');
+            document.getElementById('phoneOsSettingPage').classList.remove('active');
+            openBottomSheet();
+        }
+
         // Save & trigger Toast popup (5-3)
         function handleSave() {
             closeBottomSheet();
             setTimeout(() => {
-                showToast();
+                showToast('알림 받는 방법을 저장했어요.');
             }, 250);
         }
 
         // Toast popup show & auto hide
         let toastTimeout;
-        function showToast() {
+        function showToast(msg) {
             const toast = document.getElementById('toastPopup');
+            const msgSpan = document.getElementById('toastMsgText');
+            if (msg) msgSpan.textContent = msg;
             toast.classList.add('show');
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
+        }
+
+        function showCustomToast(msg) {
+            showToast(msg);
         }
     </script>
 </body>

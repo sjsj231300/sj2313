@@ -469,27 +469,20 @@
             margin-top: 2px;
         }
 
-        /* CTA 버튼: [K Car 앱 다운로드 바로가기 ▶] */
-        .btn-app-download-cta {
-            width: 100%;
-            height: 48px;
-            background: linear-gradient(135deg, #E5002C 0%, #BA0024 100%);
-            color: #FFFFFF;
-            border-radius: 12px;
-            text-decoration: none;
+        /* K Car 앱 다운로드 바로가기 소제목 텍스트 */
+        .store-subheading {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin: 18px 0 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 15.5px;
-            font-weight: 700;
-            box-shadow: 0 4px 14px rgba(229, 0, 44, 0.28);
-            transition: all 0.2s;
-            margin-bottom: 22px;
+            gap: 6px;
+            letter-spacing: -0.3px;
         }
-        .btn-app-download-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(229, 0, 44, 0.35);
+        .store-subheading i {
+            color: var(--kcar-red);
+            font-size: 11px;
         }
 
         /* QR Code Section (안드로이드, 애플 각각 앱스토어 연결) */
@@ -783,11 +776,11 @@
                     </ul>
                 </div>
 
-                <!-- [K Car 앱 다운로드 바로가기▶] CTA 버튼 -->
-                <a href="#qr-container" class="btn-app-download-cta" onclick="smoothScrollToQR()">
+                <!-- [K Car 앱 다운로드 바로가기▶] 소제목 텍스트 (버튼 아님) -->
+                <div class="store-subheading">
                     <span>K Car 앱 다운로드 바로가기</span>
-                    <i class="fa-solid fa-play" style="font-size: 11px;"></i>
-                </a>
+                    <i class="fa-solid fa-play"></i>
+                </div>
 
                 <!-- (QR - 안드로이드, 애플 각각 앱스토어 연결) -->
                 <div class="qr-section-title" id="qr-container">
